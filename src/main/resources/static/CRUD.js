@@ -1,4 +1,4 @@
-function createGame(){  // Create value in db
+function createGame() {  // Create value in db
     const game = {
         name: document.getElementById("name").value,
         genre: document.getElementById("genre").value,
@@ -13,17 +13,20 @@ function createGame(){  // Create value in db
         },
         body: JSON.stringify(game)
     })
-    .then(response => response.json())
-    .then(game => {
-        console.log('', game);
-    })
-    .catch((error) => {
-        console.error('Error =', error);
-    })
+        .then(response => response.json())
+        .then(game => {
+            console.log('', game);
+        })
+        .catch((error) => {
+            console.error('Error =', error);
+        })
 }
 
 function getGame() {
     const table = document.getElementById("DataTable")
+    table.innerHTML = ""
+
+    table.appendChild(createHead())
 
     fetch('/getAll').then((response) => {
         if (response.status == 200) {
@@ -31,18 +34,31 @@ function getGame() {
         } else {
             alert("server not found")
         }
-    }).then((data) => {
-        console.log(data)
-        data.forEach(row => {
+    }).then((rows) => {
+        rows.forEach((row) => {
             table.appendChild(createRow(row))
-        });
+        })
     })
 }
 
-function createRow(rowData){
+function createHead() {
+    const headers = ["ID", "NAME", "GENRE", "HOURS PLAYED", "ACTIONS"]
     const row = document.createElement("tr")
 
-    row.id=`row-${rowData.id}`
+    headers.forEach((header) => {
+        const thElement = document.createElement("th")
+        thElement.innerHTML = header
+        row.appendChild(thElement)
+
+    })
+
+    return row
+}
+
+function createRow(rowData) {
+    const row = document.createElement("tr")
+
+    row.id = `row-${rowData.id}`
 
     const id = document.createElement("td")
     id.innerHTML = rowData.id;
@@ -89,79 +105,93 @@ function getGameByID() {
         } else {
             alert("server not found")
         }
-    }).then((data) => alert(`ID: ${data.id}, NAME: ${data.name}, GENRE: ${data.genre}, Hours Played: ${data.hoursPlayed}`))     
+    }).then((data) => alert(`ID: ${data.id}, NAME: ${data.name}, GENRE: ${data.genre}, Hours Played: ${data.hoursPlayed}`))
 }
-    
 
-
-function deleteRow(rowID) {
+async function deleteRow(rowID) {
     const row = document.getElementById(`row-${rowID}`)
-    row.remove()
-    deleteByID(rowID)
+    await deleteByID(rowID)
+    getGame()
     console.log(row)
 }
 
-// function updateRow(rowID) {
-//     const row = document.getElementById(`row-${rowID}`)
-//     console.log(row.children)
+let updating = false
+function updateRow(rowID) {
+    const row = document.getElementById(`row-${rowID}`)
+    if (row !== null && !updating) {
+        updating = true
+        console.log(row.children)
 
-//     const nameBox = document.createElement("input")
-//     nameBox.value = row.children.item(1).innerHTML
-//     row.children.item(1).replaceWith(nameBox)
+        const nameBox = document.createElement("input")
+        nameBox.value = row.children.item(1).innerHTML
+        row.children.item(1).firstChild.replaceWith(nameBox)
 
-//     const preGenre = row.children.item(2).innerHTML
-//     const genreBox = document.createElement("input")
-//     genreBox.value = preGenre
-//     row.children.item(2).replaceWith(genreBox)
+        const preGenre = row.children.item(2).innerHTML
+        const genreBox = document.createElement("input")
+        genreBox.value = preGenre
+        row.children.item(2).firstChild.replaceWith(genreBox)
 
-//     const preHour = row.children.item(3).innerHTML
-//     const hourBox = document.createElement("input")
-//     hourBox.value = preHour
-//     row.children.item(3).replaceWith(hourBox)
+        const preHour = row.children.item(3).innerHTML
+        const hourBox = document.createElement("input")
+        hourBox.value = preHour
+        row.children.item(3).firstChild.replaceWith(hourBox)
 
-//     row.children.item(4).children.item(0).removeEventListener("click", updateRow())
-//     row.children.item(4).children.item(0).value = "Confirm"
-//     row.children.item(4).children.item(0).addEventListener("click", confirmUpdate())
-// }
+        const confirmBtn = document.createElement("input")
+        confirmBtn.type = "button"
+        confirmBtn.value = "Confirm"
+        confirmBtn.addEventListener("click", () => confirmUpdate(row))
 
-
-function confirmUpdate(){
-    console.log("Confirm")
-}
-
-function update(rowID) {
-    const game = {
-        name: document.getElementById("name").value,
-        genre: document.getElementById("genre").value,
-        hoursPlayed: document.getElementById("hours_played").value
+        row.children.item(4).firstChild.replaceWith(confirmBtn)
+        row.children.item(4).lastChild.remove()
     }
 
-    fetch('/replace/' + gameId, {
+}
+
+
+async function confirmUpdate(row) {
+    const gameData = {
+        name: row.children.item(1).firstChild.value,
+        genre: row.children.item(2).firstChild.value,
+        hoursPlayed: row.children.item(3).firstChild.value
+    }
+    const rowIdentifier = Number.parseInt(row.id.split("-")[1])
+    console.log(gameData);
+    
+    await update(rowIdentifier, gameData)
+
+    getGame()
+
+    console.log("Confirm")
+    updating = false
+}
+
+function update(gameID, data) {
+    return fetch(`/replace/${gameID}`, {
         method: 'PUT',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(game)
+        body: JSON.stringify(data)
     })
-    .then(response => response.json())
-    .then(game => {
-        console.log('', game);
-        getGame();
-    })
-    .catch((error) => {
-        console.error('Error =', error);
-    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('', data);
+            return data
+        })
+        .catch((error) => {
+            console.error('Error =', error);
+        })
 }
 
-function deleteByID(gameId) {
-    let failed = false;
-    fetch(`/remove/${gameId}`, {
+function deleteByID(gameID) {
+    return fetch(`/remove/${gameID}`, {
         method: 'DELETE',
     })
         .then(response => {
-            if (response == 204) {
+            if (response.status == 204) {
                 console.log(`Received: ${response.status}`)
+                
             } else {
                 console.log(`Expected: 204, Actual: ${response.status}`)
             }
