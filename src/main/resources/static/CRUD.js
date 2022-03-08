@@ -35,22 +35,26 @@ function getGame() {
 
                     refTable = document.createElement("table")
                     refTable.style.border=1
+                    refTable.id = "DataTable";
         
                     let refRowHead= document.createElement("tr")
                     let refDataHead1=document.createElement("td")
                     let refDataHead2=document.createElement("td")
                     let refDataHead3=document.createElement("td")
                     let refDataHead4=document.createElement("td")
+                    let refDataHead5=document.createElement("td")
 
                     refDataHead1.innerHTML="ID";
                     refDataHead2.innerHTML="NAME";
                     refDataHead3.innerHTML="GENRE";
                     refDataHead4.innerHTML="HOURS PLAYED";
+                    refDataHead5.innerHTML="DELETE";
 
                     refRowHead.appendChild(refDataHead1)
                     refRowHead.appendChild(refDataHead2)
                     refRowHead.appendChild(refDataHead3)
                     refRowHead.appendChild(refDataHead4)
+                    refRowHead.appendChild(refDataHead5)
 
                     refTable.appendChild(refRowHead)
 
@@ -101,11 +105,14 @@ function appendTable(id, Gname, genre, hours){
     let refTd2 = document.createElement("td")
     let refTd3 = document.createElement("td")
     let refTd4 = document.createElement("td")
+    let refTd5 = document.createElement("td")
 
     let refDelBtn = document.createElement("input")
     let refUpdateBtn = document.createElement("input")
 
-    
+	refDelBtn.type = "button"
+    refDelBtn.value = "delete"
+    refDelBtn.onclick = function() {deleteRow(this)};
 
 
 
@@ -113,20 +120,25 @@ function appendTable(id, Gname, genre, hours){
     refTd2.innerHTML = Gname
     refTd3.innerHTML = genre
     refTd4.innerHTML = hours
+    refTd5.appendChild(refDelBtn);
 
     refRow1.appendChild(refTd1)
     refRow1.appendChild(refTd2)
     refRow1.appendChild(refTd3)
     refRow1.appendChild(refTd4)
+    refRow1.appendChild(refTd5)
     
 
     refTable.appendChild(refRow1)
     document.body.append(refTable)
 }
 
-function deleteRow(row) {
-    let delRow = row.parentNode.parentNode.rowIndex;
-    document.getElementById("DataTable").deleteRow(delRow);
+
+
+function deleteRow(element) {
+  var rowdel = element.parentNode.parentNode.rowIndex;
+  console.log(rowdel)
+  document.getElementById("DataTable").deleteRow(rowdel);
 }
 
 
