@@ -10,7 +10,4 @@ import com.springproject.domain.Game;
 @Repository
 public interface GameRepo extends JpaRepository<Game, Integer>{
 
-	List<Game> findByNameIgnoreCase(String name);
-	
-	List<Game> findByGenreIgnoreCase(String genre);
 }

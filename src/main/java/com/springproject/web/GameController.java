@@ -43,15 +43,8 @@ public class GameController {
 	public Game getGame(@PathVariable Integer id) {
 		return this.service.getById(id);
 	}
-	 
-	@GetMapping("/getByName/{name}") // 200 - OK
-	public ResponseEntity<List<Game>> getGameByName(@PathVariable String name) {
-		List<Game> found = this.service.getAllByName(name);
-		return ResponseEntity.ok(found);
-	}
-
 	@PutMapping("/replace/{id}") //202 - Accepted
-	public ResponseEntity<Game> replaceDog(@PathVariable Integer id, @RequestBody Game newGame) {
+	public ResponseEntity<Game> replaceGame(@PathVariable Integer id, @RequestBody Game newGame) {
 		Game body = this.service.replace(id, newGame);
 		ResponseEntity<Game> response = new ResponseEntity<Game>(body, HttpStatus.ACCEPTED);
 		return response;
