@@ -76,30 +76,16 @@ function createRow(rowData){
 function getGameByID() {
     let gameIds = document.getElementById("gameId").value
 
-    let refPromise = fetch('/getById/' + gameIds) // Get by ID
-    refPromise.then(
-        function (response) {
-            console.log(response.status)
-            if (response.status == 200) {
-                let refResponsePromise = response.json()
-                refResponsePromise.then(function (game) {
-                    console.log(game)
-
-                    for (let i = 0; i < game.length; i++) {
-                        
-                            let refDiv = document.createElement("div")
-                            refDiv.innerHTML = game[i].id + "  " + game[i].name + "  " + game[i].genre + "  " + game[i].hoursPlayed
-                            document.body.appendChild(refDiv)
-                        
-                    }
-                })
-            }
-            else {
-                alert("Server not found")
-            }
+    fetch('/getById/' + gameIds).then((response) => {
+        if (response.status == 200) {
+            return response.json();
+        } else {
+            alert("server not found")
         }
-    )
+    }).then((data) => alert(`ID: ${data.id}, NAME: ${data.name}, GENRE: ${data.genre}, Hours Played: ${data.hoursPlayed}`))     
 }
+    
+
 
 function deleteRow(rowID) {
     const row = document.getElementById(`row-${rowID}`)
