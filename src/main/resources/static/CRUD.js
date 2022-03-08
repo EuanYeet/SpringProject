@@ -1,3 +1,12 @@
+function pageLoad() {
+    getGame()
+
+    document.getElementById("submitBtn").addEventListener("click", async () => {
+        await createGame()
+        getGame()
+    })
+}
+
 function createGame() {  // Create value in db
     const game = {
         name: document.getElementById("name").value,
@@ -5,7 +14,7 @@ function createGame() {  // Create value in db
         hoursPlayed: document.getElementById("hoursPlayed").value
     }
 
-    fetch('/create', {
+    return fetch('/create', {
         method: 'post',
         headers: {
             'Accept': 'application/json',
@@ -68,7 +77,6 @@ function createRow(rowData) {
     name.innerHTML = rowData.name;
     row.appendChild(name)
 
-    console.log(rowData.genre)
     const genre = document.createElement("td")
     genre.innerHTML = rowData.genre;
     row.appendChild(genre)
