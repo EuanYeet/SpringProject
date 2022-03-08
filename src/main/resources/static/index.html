@@ -8,6 +8,8 @@
 
 
 <body onload="getGame()">
+
+    <h1> CREATE </h1>
     <form id="createForm">
         <input type="text" id="name" value="Enter Name">
         <input type="text" id="genre"  value="Enter Genre">
@@ -15,11 +17,16 @@
 
         <input type="button" value="Submit" onclick="createGame()">
     </form>
-	
+
+	<h1> READ ALL </h1>
 	<input type="button" value="Click" onclick="getGame()"> <br>
-	
+
+	<h1> GET BY ID </h1>
 	<br><input id="gameId" type="text" value="Enter ID">
     <input type="button" value="getGameByID" onclick="getGameByID()">
+
+    <h1> TABLE </h1>
+    <br>
 
     <table id="DataTable">
         <tr> 

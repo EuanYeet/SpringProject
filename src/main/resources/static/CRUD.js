@@ -62,10 +62,18 @@ function createRow(rowData){
     row.appendChild(hours)
 
     const actions = document.createElement("td")
+
     const delBtn = document.createElement("input")
     delBtn.type = "button"
     delBtn.value = "Delete"
     delBtn.addEventListener("click", () => deleteRow(rowData.id))
+
+    const updateBtn = document.createElement("input")
+    updateBtn.type = "button"
+    updateBtn.value = "Update"
+    updateBtn.addEventListener("click", () => updateRow(rowData.id))
+
+    actions.appendChild(updateBtn)
     actions.appendChild(delBtn)
     row.appendChild(actions)
 
@@ -75,7 +83,6 @@ function createRow(rowData){
 
 function getGameByID() {
     let gameIds = document.getElementById("gameId").value
-
     fetch('/getById/' + gameIds).then((response) => {
         if (response.status == 200) {
             return response.json();
@@ -94,15 +101,42 @@ function deleteRow(rowID) {
     console.log(row)
 }
 
+// function updateRow(rowID) {
+//     const row = document.getElementById(`row-${rowID}`)
+//     console.log(row.children)
 
-function update() {
+//     const nameBox = document.createElement("input")
+//     nameBox.value = row.children.item(1).innerHTML
+//     row.children.item(1).replaceWith(nameBox)
+
+//     const preGenre = row.children.item(2).innerHTML
+//     const genreBox = document.createElement("input")
+//     genreBox.value = preGenre
+//     row.children.item(2).replaceWith(genreBox)
+
+//     const preHour = row.children.item(3).innerHTML
+//     const hourBox = document.createElement("input")
+//     hourBox.value = preHour
+//     row.children.item(3).replaceWith(hourBox)
+
+//     row.children.item(4).children.item(0).removeEventListener("click", updateRow())
+//     row.children.item(4).children.item(0).value = "Confirm"
+//     row.children.item(4).children.item(0).addEventListener("click", confirmUpdate())
+// }
+
+
+function confirmUpdate(){
+    console.log("Confirm")
+}
+
+function update(rowID) {
     const game = {
         name: document.getElementById("name").value,
         genre: document.getElementById("genre").value,
         hoursPlayed: document.getElementById("hours_played").value
     }
 
-    let refPromise = fetch('/replace/' + gameId, {
+    fetch('/replace/' + gameId, {
         method: 'PUT',
         headers: {
             'Accept': 'application/json',
