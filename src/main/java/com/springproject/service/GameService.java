@@ -37,16 +37,6 @@ public class GameService implements ServiceIF<Game> {
 		Optional<Game> found = this.repo.findById(id);
 		return found.get();
 	}
-	// Get Game By Name
-	public List<Game> getAllByName(String name) {
-		List<Game> found = this.repo.findByNameIgnoreCase(name);
-		return found;
-	}
-	// Get Game By Genre
-	public List<Game> getAllByGenre(String genre) {
-		List<Game> found = this.repo.findByGenreIgnoreCase(genre);
-		return found;
-	}
 	// Update fields at selected ID
 	public Game replace(Integer id, Game newGame) {
 		Game existing = this.repo.findById(id).get();
