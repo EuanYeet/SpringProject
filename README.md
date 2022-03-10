@@ -28,7 +28,7 @@ Spring Tools 4(4.13.1 or Higher)
 
 ### UML Class Diagram
 
-[UML Diagram](https://drive.google.com/file/d/1vXOSIDyPHMQJH8KM96uHOWTb-FHJikhp/view?usp=sharing)
+[UML Diagram](https://drive.google.com/file/d/1gYIqgVaqdazsM92xsRpT3s-Zxq6Ii3U1/view?usp=sharing)
 
 ### WebPage Design
 
